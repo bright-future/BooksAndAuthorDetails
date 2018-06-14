@@ -2,5 +2,5 @@
   "dbConnectionAddress":"mongodb://localhost:27017",
   "database":"Library",
   "collections":["books","authors"],
-  "ProtoPath":"/home/bats/Dev/NodeJsPractice/ProtoFiles/"
+  "ProtoPath":"/home/bats/Dev/BooksAndAuthorDetails/ProtoFiles/"
 }

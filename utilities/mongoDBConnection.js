@@ -15,14 +15,15 @@ module.exports = {
      MongoClient = require('mongodb').MongoClient;
      MongoClient.connect(url,function(err,connection){
       if(err) throw err;
-      // console.log(dbObj);
+      console.log("credentials",url,dbName);
+
       var db = connection.db(dbName);
       dbRetainedObj["connection"] = connection;
       dbRetainedObj["db"] = db;
 
       // console.log(db);
       db.listCollections().toArray(function(err, collections){
-          console.log(collections);
+          console.log("connected with db");
       });
       dbretainedObj = db;
   // closeMongoConnections:function(){
@@ -36,31 +37,51 @@ module.exports = {
     });
   },
   findBooksByRatings:function(collectionName,callback){
-    var mysort = { rating: 1 };
+    console.log(collectionName,dbRetainedObj)
+    var mysort = { rating: -1 };
     dbRetainedObj["db"].collection(collectionName)
-    .find({},{id:1,name:1,description:!,authorName}).sort(mysort)
+    .find({},{id:1,name:1,description:1,authorName:1}).sort(mysort)
     .toArray(function(err,results){
       if (err) throw err;
       console.log(results);
-      callback = [];
       var callbackReturn=[];
-      for(result in results){
-        callbackReturn.append(result);
-      }
+      // var AuthIds = [];
+      // partial work
+      results.forEach(function(item){
+        // AuthIds.push(item["authorId"]);
+        callbackReturn.push({id:item["id"],name:item["name"],description:item["description"],authorName:item["name"]});
+        // findAuthorName("author",item["authorId"],item,callbackReturn,callback)
+      })
+
+      // results.forEach(function(item){
+      //   AuthIds.push(item["authorId"]);
+      //   // callbackReturn.push({id:item["id"],name:item["name"],description:item["description"],authorName:item["name"]});
+      //   this.findAuthorName("author",item["authorId"],item,callbackReturn,callback)
+      // })
+
       callback(null,callbackReturn)
     })
   },
   findBooksByAuthorId:function(collectionName,authId,callback){
     dbRetainedObj["db"].collection(collectionName)
-    .find({authorId:authId},{id:1,name:1,description:!,authorName})
+    .find({authorId:authId},{id:1,name:1,description:1})
     .toArray(function(err,results){
       if (err) throw err;
       console.log(results);
-      callback = [];
       var callbackReturn=[];
-      for(result in results){
-        callbackReturn.append(result);
-      }
+      results.forEach(function(item){
+        callbackReturn.push({id:item["id"],name:item["name"],description:item["description"]})
+      })
+      callback(null,callbackReturn)
+    })
+  },
+  findAuthorName:function(collectionName,authId,item,callbackReturn,callback){
+    dbRetainedObj["db"].collection(collectionName)
+    .findOne({authorId:authId},{name:1})
+    .toArray(function(err,results){
+      if (err) throw err;
+      console.log(results);
+      callbackReturn.push({id:item["id"],name:item["name"],description:item["description"],authorname:results["name"]});
       callback(null,callbackReturn)
     })
   },

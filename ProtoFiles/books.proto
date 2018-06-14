@@ -31,5 +31,5 @@ message books1 {
   repeated book1 books = 1;
 }
 message books2{
-  repeat book2 books = 1;
+  repeated book2 books = 1;
 }

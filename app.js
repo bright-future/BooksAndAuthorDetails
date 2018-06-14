@@ -14,7 +14,7 @@ var booksProto = grpc.load(PROTO_PATH); //whole book proto is present here
  */
 function books1ServiceHandler(call, callback) {
   // because error is null so null
-  console.log("see call",call);
+  console.log("see call",call.request);
   if(call.request !=null){
     databaseconnectionObj.findBooksByRatings(configFile["collections"][0],callback);
   }
@@ -24,9 +24,10 @@ function books1ServiceHandler(call, callback) {
 }
 function books2ServiceHandler(call, callback) {
   // because error is null so null
-  console.log("see call",call);
+  console.log("see call2",call.request);
   if(call.request !=null){
-    databaseconnectionObj.findBooksByRatings(configFile["collections"][0],callback);
+
+    databaseconnectionObj.findBooksByAuthorId(configFile["collections"][0],call.request.id,callback);
   }
   else{
     callback(new Error('Invalid request'));
@@ -34,15 +35,16 @@ function books2ServiceHandler(call, callback) {
 }
 
 console.log(databaseconnectionObj)
-
+databaseconnectionObj.initMongo(configFile["dbConnectionAddress"]
+                          ,configFile["database"]);
 
 
 function main(){
   // database connections
-  databaseconnectionObj.initMongo(configFile["dbConnectionAddress"]
-                            ,configFile["database"]);
+  // databaseconnectionObj.initMongo(configFile["dbConnectionAddress"]
+                            // ,configFile["database"]);
   var Server = new grpc.Server();
-  Server.addProtoService(mathsProto.maths.additionService.service,
+  Server.addProtoService(booksProto.books.booksService.service,
     {BooksInRatingOrder:books1ServiceHandler,BooksByAuthor:books2ServiceHandler}
   );
   Server.bind('0.0.0.0:50051', grpc.ServerCredentials.createInsecure());
