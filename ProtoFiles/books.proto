@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package books;
+
+// The greeting service definition.
+service booksService {
+  // Sends a greeting
+  rpc BooksInRatingOrder(Request) returns (books1) {}
+  rpc  BooksByAuthor(AuthorId) returns (books2){}
+}
+
+// The request message containing the user's name.
+message book1{
+  int32 id =1;
+  string name = 2;
+  string description = 3;
+  string authorName = 4;
+}
+message book2{
+  int32 id =1;
+  string name = 2;
+  string description = 3;
+}
+message Request {
+
+}
+message AuthorId{
+  int32 id = 1;
+}
+message books1 {
+  repeated book1 books = 1;
+}
+message books2{
+  repeat book2 books = 1;
+}
