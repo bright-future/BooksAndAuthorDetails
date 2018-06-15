@@ -18,10 +18,10 @@ function main() {
     console.log('response for query :');
     console.log(response);
   });
-  // client.BooksByAuthor({id:3},function(err,response){
-  //   console.log('response for query2 :');
-  //   console.log(response);
-  // });
+  client.BooksByAuthor({id:3},function(err,response){
+    console.log('response for query2 :');
+    console.log(response);
+  });
 }
 
 main();
